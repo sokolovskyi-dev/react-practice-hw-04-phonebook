@@ -1,34 +1,93 @@
-import { useState } from 'react';
+import { nanoid } from 'nanoid';
+import { useEffect, useState } from 'react';
 
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
+import { ContactForm } from './components/ContactForm/ContactForm';
+import { ContactList } from './components/ContactList/ContactList';
+import { Filter } from './components/Filter/Filter';
 
-function App() {
-  const [count, setCount] = useState(0);
+// import { ContactForm } from './ContactForm/ContactForm';
+// import { ContactList } from './ContactList/ContactList';
+// import { Filter } from './Filter/Filter';
+
+export const App = () => {
+  const initialContacts = [
+    { id: 1, name: 'Rosie Simpson', number: '645-17-49' },
+    { id: 2, name: 'Hermonie Kline', number: '555-22-41' },
+    { id: 3, name: 'Eden Clements', number: '555-13-94' },
+    { id: 4, name: 'Annie Copeland', number: '227-91-26' },
+  ];
+
+  const [contacts, setContacts] = useState(() => {
+    const saved = JSON.parse(localStorage.getItem('contacts'));
+    return saved?.length ? saved : initialContacts;
+  });
+  const [filter, setFilter] = useState('');
+
+  // useEffect(() => {
+  //   const savedContacts = JSON.parse(localStorage.getItem('contacts'));
+  //   if (savedContacts && savedContacts.length) {
+  //     setContacts(savedContacts);
+  //   }
+  // }, []);
+
+  // componentDidMount = () => {
+  //   const savedContacts = JSON.parse(localStorage.getItem('contacts'));
+  //   if (savedContacts.length) {
+  //     this.setState({ contacts: savedContacts });
+  //   }
+  // };
+
+  // componentDidUpdate(_, prevState) {
+  //   if (prevState.contacts.length !== this.state.contacts.length) {
+  //     localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+  //   }
+  // }
+
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
+
+  const handleSubmit = (name, number) => {
+    const normalizedNewName = name.toLowerCase().trim();
+    const isDuplicate = contacts.some(
+      ({ name }) => name.toLowerCase().trim() === normalizedNewName
+    );
+
+    if (isDuplicate) {
+      alert(`${name} is already in contacts`);
+      return;
+    }
+
+    setContacts(prev => [...prev, { id: nanoid(), name, number }]);
+  };
+
+  const handleChange = e => {
+    const { value } = e.target;
+    setFilter(value);
+  };
+
+  const getFilteredContacts = () => {
+    const filterValue = filter.toLowerCase();
+    return contacts.filter(({ name }) => name.toLowerCase().includes(filterValue));
+  };
+
+  const deleteContact = deleteId => {
+    const newContactList = contacts.filter(({ id }) => id !== deleteId);
+    setContacts(newContactList);
+  };
+
+  const filteredContacts = getFilteredContacts();
 
   return (
-    <main className="section container">
-      <div className="flex-center">
-        <a href="https://vite.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <div className="grid-center">
-        <h1 className="text-center">Vite + React + SWC + ESLint + Prettier + alias @</h1>
-        <div className="card grid-center">
-          <button onClick={() => setCount(count => count + 1)}>count is {count}</button>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test HMR
-          </p>
-        </div>
-        <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-      </div>
-    </main>
-  );
-}
+    <div className="container">
+      <h1>Phonebook</h1>
+      <ContactForm handleSubmit={handleSubmit} />
 
-export default App;
+      <h2>Contacts</h2>
+
+      <Filter handleChange={handleChange} filter={filter} />
+
+      <ContactList filteredContacts={filteredContacts} deleteContact={deleteContact} />
+    </div>
+  );
+};
