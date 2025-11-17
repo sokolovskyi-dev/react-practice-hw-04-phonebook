@@ -6,7 +6,7 @@
 }
 
 .container.narrow {
-  --container-max: 960px;
+  --container-max: 600px;
 }
 
 .container.wide {

@@ -7,7 +7,7 @@ export const Form = styled.form`
   gap: 15px;
 
   & input {
-    width: 200px;
+    width: 220px;
     margin-top: 5px;
     font-size: 16px;
     padding: 12px;

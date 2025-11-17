@@ -5,11 +5,7 @@ import { ContactForm } from './components/ContactForm/ContactForm';
 import { ContactList } from './components/ContactList/ContactList';
 import { Filter } from './components/Filter/Filter';
 
-// import { ContactForm } from './ContactForm/ContactForm';
-// import { ContactList } from './ContactList/ContactList';
-// import { Filter } from './Filter/Filter';
-
-export const App = () => {
+const App = () => {
   const initialContacts = [
     { id: 1, name: 'Rosie Simpson', number: '645-17-49' },
     { id: 2, name: 'Hermonie Kline', number: '555-22-41' },
@@ -22,26 +18,6 @@ export const App = () => {
     return saved?.length ? saved : initialContacts;
   });
   const [filter, setFilter] = useState('');
-
-  // useEffect(() => {
-  //   const savedContacts = JSON.parse(localStorage.getItem('contacts'));
-  //   if (savedContacts && savedContacts.length) {
-  //     setContacts(savedContacts);
-  //   }
-  // }, []);
-
-  // componentDidMount = () => {
-  //   const savedContacts = JSON.parse(localStorage.getItem('contacts'));
-  //   if (savedContacts.length) {
-  //     this.setState({ contacts: savedContacts });
-  //   }
-  // };
-
-  // componentDidUpdate(_, prevState) {
-  //   if (prevState.contacts.length !== this.state.contacts.length) {
-  //     localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-  //   }
-  // }
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
@@ -79,7 +55,7 @@ export const App = () => {
   const filteredContacts = getFilteredContacts();
 
   return (
-    <div className="container">
+    <div className="section container narrow">
       <h1>Phonebook</h1>
       <ContactForm handleSubmit={handleSubmit} />
 
@@ -91,3 +67,5 @@ export const App = () => {
     </div>
   );
 };
+
+export default App;
