@@ -17,6 +17,7 @@ export default defineConfig({
       },
     }),
   ],
+  base: '/react-practice-hw-04-phonebook/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
